@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "hello-ai": {
+      "appLocation": "src",
+      "apiLocation": "api",
+      "outputLocation": "src",
+      "apiLanguage": "dotnet",
+      "apiVersion": "6.0"
+    }
+  }
+}

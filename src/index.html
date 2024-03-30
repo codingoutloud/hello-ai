@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>hello-ai.dev</title>
+</head>
+
+<body>
+  <h1>Hello, human!</h1>
+  <h2>Can you spot the hallucination?</h2>
+
+  <main>
+    <form>
+      <h3>AI Prompt</h3>
+      <label for="promptForAI">
+        <textarea id="promptForAI" rows="4" cols="60" title="Prompt text that will be sent to the AI."
+          readonly>Tell me about an interesting event in world history that took place on this day in some past year. Be sure to include the relevant historical date in the response.</textarea>
+      </label>
+
+      <div id="action">
+        <button type="button" id="askAI" title="Sends prompt text to the AI.">Ask AI</button>
+
+        <input type="checkbox" id="togglePrompt" name="togglePrompt"
+          title="When selected, include additional grounding data in the prompt text. This helps prevent hallucinations.">
+        <label for="togglePrompt" title="Select to include additional grounding data in the prompt text.">
+          Include additional grounding data</label>
+      </div>
+
+      <h3>AI Response</h3>
+      <label for="responseFromAI">
+        <textarea id="responseFromAI" rows="4" cols="60"
+          title="Response text from the AI after processing the prompt text."
+          placeholder="Click 'Ask AI' button to see the AI's response to the prompt." readonly></textarea>
+      </label>
+    </form>
+
+    <p>LLM-powered AIs are well-known to experience "hallucinations" where results can include innacurate or completely
+      made-up information.</p>
+    <p>While perhaps surprising to learn, it can be helpful to realize that underlyng AI model doesn't inherently know
+      what "today" is. It has no idea!</p>
+    <p>So if we ask the AI to provide information on something that happened on this day in history, it may hallucinate
+      about that. See for yourself by trying it out the above without checking "include additional grounding data" and
+      seeing if the response is contextually accurate &rarr; is it a fact from history that happened ON THIS DAY or is
+      it from some other day?</p>
+    <p>One of the techniques for battling this is to provide supplementary data that is trust to help "ground" the AI to
+      produce more accurate results. One powerful form of this is known commonly as the <a
+        href="https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview">RAG pattern</a>
+      which this page demonstrates a very simple use of by providing today's date.</p>
+  </main>
+
+  <script>
+    // Save original the AI prompt text so we can restore it later as needed
+    var originalPrompt = document.getElementById('promptForAI').value;
+
+    var today = new Date();
+    var todayMonDay = today.toLocaleString('default', { month: 'short' }) + ' ' + today.getDate();
+    console.log(todayMonDay);
+
+    document.getElementById('togglePrompt').addEventListener('change', function () {
+      if (this.checked) {
+        document.getElementById('promptForAI').value = originalPrompt + ' Today is ' + todayMonDay + '.';
+      } else {
+        document.getElementById('promptForAI').value = originalPrompt;
+      }
+    });
+
+    document.getElementById('askAI').addEventListener('click', function () {
+      fetch('/api/todayinhistory')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('responseFromAI').value = data;
+        })
+        .catch(error => console.error('Error: ', error));
+    });
+  </script>
+</body>
+
+</html>
