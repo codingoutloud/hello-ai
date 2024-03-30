@@ -56,18 +56,21 @@
     var originalPrompt = document.getElementById('promptForAI').value;
 
     var today = new Date();
-    var todayMonDay = today.toLocaleString('default', { month: 'short' }) + ' ' + today.getDate();
-    console.log(todayMonDay);
+    var doy = today.toLocaleString('default', { month: 'short' }) + ' ' + today.getDate();
+    console.log('doy = ' + doy);
 
     document.getElementById('togglePrompt').addEventListener('change', function () {
       if (this.checked) {
-        document.getElementById('promptForAI').value = originalPrompt + ' Today is ' + todayMonDay + '.';
+        document.getElementById('promptForAI').value = originalPrompt + ' Today is ' + doy + '.';
       } else {
         document.getElementById('promptForAI').value = originalPrompt;
       }
     });
 
     document.getElementById('askAI').addEventListener('click', function () {
+      var today = new Date();
+      // not a big risk, but date can roll over while page is open
+      var doy = today.toLocaleString('default', { month: 'short' }) + ' ' + today.getDate();
       var qs = document.getElementById('togglePrompt').checked ? 
       '?doy=' + doy : '';
       fetch('/api/todayinhistory' + qs)
