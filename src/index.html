@@ -68,7 +68,9 @@
     });
 
     document.getElementById('askAI').addEventListener('click', function () {
-      fetch('/api/todayinhistory')
+      var qs = document.getElementById('togglePrompt').checked ? 
+      '?doy=' + doy : '';
+      fetch('/api/todayinhistory' + qs)
         .then(response => response.text())
         .then(data => {
           document.getElementById('responseFromAI').value = data;

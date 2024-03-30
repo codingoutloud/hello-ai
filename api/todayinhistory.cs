@@ -23,17 +23,17 @@ namespace DoingAzure.HelloAI
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            string doy = req.Query["doy"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            doy = doy ?? data?.name;
 
             string year = DateTime.Now.ToString("yyyy");
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name} in year {year}. This HTTP triggered function executed successfully.";
+            string responseMessage = string.IsNullOrEmpty(doy)
+                ? $"This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response."
+                : $"Hello, {doy} in year {year}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
         }
