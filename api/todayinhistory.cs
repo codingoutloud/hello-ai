@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
+//using Azure;
+//using Azure.AI.OpenAI;
+
+
 namespace DoingAzure.HelloAI
 {
     public static class todayinhistory
@@ -25,9 +29,11 @@ namespace DoingAzure.HelloAI
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
+            string year = DateTime.Now.ToString("yyyy");
+
             string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                ? "This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response."
+                : $"Hello, {name} in year {year}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
         }
