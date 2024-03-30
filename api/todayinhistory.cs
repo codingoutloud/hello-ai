@@ -21,16 +21,19 @@ namespace DoingAzure.HelloAI
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Called todayinhistory...");
 
-            string doy = req.Query["doy"];
+            // doy is "day of year" - Feb 13, Apr 5, May 1, etc.
+            string doy = req.Query["doy"]; 
+            log.LogInformation($"doy = {doy}");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            doy = doy ?? data?.name;
+            // string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            // dynamic data = JsonConvert.DeserializeObject(requestBody);
+            // doy = doy ?? data?.name;
 
             string year = DateTime.Now.ToString("yyyy");
-
+            
+            log.LogInformation($"string.IsNullOrEmpty(doy) = {string.IsNullOrEmpty(doy)}");
             string responseMessage = string.IsNullOrEmpty(doy)
                 ? $"This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {doy} in year {year}. This HTTP triggered function executed successfully.";
