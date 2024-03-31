@@ -36,7 +36,8 @@ namespace DoingAzure.HelloAI
 
 #if true
             var client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(key));
-            var prompt = "Tell me about an interesting event in world history that took place on this day in some past year. Be sure to include the relevant historical date in the response.";
+           // var prompt = "Tell me about an interesting event in world history that took place on this day in some past year. Be sure to include the relevant historical date in the response.";
+            var prompt = "Tell me about an interesting event that took place on this day in some past year. Be sure to include the relevant date in the response.";
 
             if (!string.IsNullOrEmpty(doy))
             {
