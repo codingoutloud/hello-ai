@@ -43,7 +43,7 @@ namespace DoingAzure.HelloAI
                 var doyServer = DateTime.Now.ToString("MMMM dd");
                 if (String.Compare(doy, doyServer, true) != 0)
                 {
-                    log.LogWarning("Provided doy [{doy}] does not match today's date computed on server [{doyServer}]. Is someone trying to hack us?");
+                    log.LogWarning("* * * Provided doy [{doy}] does not match today's date computed on server [{doyServer}]. Is someone trying to hack us?");
                 }
                 prompt += $"Today is {doyServer}.\n";
             }
@@ -95,7 +95,8 @@ namespace DoingAzure.HelloAI
                 ? $"This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response. Otherwise: {completion}"
                 : $"Hello, {doy} in year {year}. This HTTP triggered function executed successfully and got this response: {completion}";
 
-            return new OkObjectResult(responseMessage);
+            //return new OkObjectResult(responseMessage);
+            return new OkObjectResult(completion);
         }
     }
 }
