@@ -67,7 +67,7 @@ namespace DoingAzure.HelloAI
             {
                 if (String.IsNullOrEmpty(completion))
                 {
-                    completion = choice.Text;
+                    completion = choice.Text.Trim();
                     log.LogInformation($"capturing completion ({i}): {completion}");
                 }
                 else
