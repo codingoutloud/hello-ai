@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-//using Azure;
-//using Azure.AI.OpenAI;
-
+#if true
+using Azure;
+using Azure.AI.OpenAI;
+#endif
 
 namespace DoingAzure.HelloAI
 {
@@ -23,27 +24,66 @@ namespace DoingAzure.HelloAI
         {
             log.LogInformation("Called todayinhistory...");
 
-            string? key = System.Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY", EnvironmentVariableTarget.Process);
-            log.LogInformation(key.Length > 0 ? "API Key found" : "API Key not found"); 
-            string? endpoint = "https://tdih.openai.azure.com/";
-            string? deployment = "tdih-gpt-35-turbo-instruct";
+            var key = System.Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY", EnvironmentVariableTarget.Process);
+            log.LogInformation(key.Length > 0 ? "API Key found" : "API Key not found");
+            var endpoint = "https://tdih.openai.azure.com/";
+            var deployment = "tdih-gpt-35-turbo-instruct";
             log.LogInformation($"endpoint = {endpoint}, deployment = {deployment}");
-            log.LogInformation($"key = {key}");
-            
+
             // doy is "day of year" - Feb 13, Apr 5, May 1, etc.
-            string doy = req.Query["doy"]; 
+            string doy = req.Query["doy"];
             log.LogInformation($"doy = {doy}");
+
+#if true
+            var client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(key));
+            var prompt = "Tell me about an interesting event in world history that took place on this day in some past year. Be sure to include the relevant historical date in the response.";
+            log.LogInformation($"prompt = {prompt}");
+
+            CompletionsOptions completionsOptions = new()
+            {
+                DeploymentName = deployment,
+                Prompts = { prompt },
+                MaxTokens = 250,
+            };
+
+            Response<Completions> completionsResponse = client.GetCompletions(completionsOptions);
+
+            #if true
+            string completion = completionsResponse.Value.Choices[0].Text;
+            #else
+            string completion = String.Empty;
+            int i = 0;
+            foreach (var choice in completionsResponse.Value.Choices)
+            {
+                if (String.IsNullOrEmpty(completion))
+                {
+                    completion = choice.Text;
+                    log.LogInformation($"capturing completion ({i}): {completion}");
+                }
+                else
+                {
+                    log.LogInformation($"ignoring completion ({i}): {completion}");
+                }
+            }
+            #endif
+#endif
+
+            log.LogInformation($"\nPROMPT: \n\n{prompt}");
+            var today = DateTime.Now.ToString("MMMM dd");
+            log.LogInformation($"Today is {today}");
+            log.LogInformation($"Tokens used: {completionsResponse.Value.Usage.CompletionTokens}/{completionsOptions.MaxTokens}");
+
 
             // string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             // dynamic data = JsonConvert.DeserializeObject(requestBody);
             // doy = doy ?? data?.name;
 
             string year = DateTime.Now.ToString("yyyy");
-            
+
             log.LogInformation($"string.IsNullOrEmpty(doy) = {string.IsNullOrEmpty(doy)}");
             string responseMessage = string.IsNullOrEmpty(doy)
-                ? $"This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {doy} in year {year}. This HTTP triggered function executed successfully.";
+                ? $"This HTTP triggered function executed successfully in year {year}. Pass a name in the query string or in the request body for a personalized response. Otherwise: {completion}"
+                : $"Hello, {doy} in year {year}. This HTTP triggered function executed successfully and got this response: {completion}";
 
             return new OkObjectResult(responseMessage);
         }
