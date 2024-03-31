@@ -28,7 +28,8 @@ namespace DoingAzure.HelloAI
             string? endpoint = "https://tdih.openai.azure.com/";
             string? deployment = "tdih-gpt-35-turbo-instruct";
             log.LogInformation($"endpoint = {endpoint}, deployment = {deployment}");
-
+            log.LogInformation($"key = {key}");
+            
             // doy is "day of year" - Feb 13, Apr 5, May 1, etc.
             string doy = req.Query["doy"]; 
             log.LogInformation($"doy = {doy}");
