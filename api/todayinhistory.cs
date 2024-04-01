@@ -37,14 +37,15 @@ namespace DoingAzure.HelloAI
 #if true
             var client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(key));
            // var prompt = "Tell me about an interesting event in world history that took place on this day in some past year. Be sure to include the relevant historical date in the response.";
-            var prompt = "Tell me about an interesting event that took place on this day in some past year within the past 400 years. Include the date of the event in the response.";
+           // var prompt = "Tell me about an interesting event that took place on this day in some past year within the past 400 years. Include the date of the event in the response.";
+            var prompt = "Tell me about an interesting event that took place on this day within the past 400 years. Include the date of the event in the response.";
 
             if (!string.IsNullOrEmpty(doy))
             {
                 var doyServer = DateTime.Now.ToString("MMMM dd");
                 if (String.Compare(doy, doyServer, true) != 0)
                 {
-                    log.LogWarning("* * * Provided doy [{doy}] does not match today's date computed on server [{doyServer}]. Is someone trying to hack us?");
+                    log.LogWarning($"* * * Provided doy [{doy}] does not match today's date computed on server [{doyServer}]. Is someone trying to hack us?");
                 }
                 prompt += $"Today is {doyServer}.\n";
             }
