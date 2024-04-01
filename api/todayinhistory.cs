@@ -42,7 +42,7 @@ namespace DoingAzure.HelloAI
 
             if (!string.IsNullOrEmpty(doy))
             {
-                var doyServer = DateTime.Now.ToString("MMMM dd");
+                var doyServer = DateTime.Now.ToString("MMM d");
                 if (String.Compare(doy, doyServer, true) != 0)
                 {
                     log.LogWarning($"* * * Provided doy [{doy}] does not match today's date computed on server [{doyServer}]. Is someone trying to hack us?");
