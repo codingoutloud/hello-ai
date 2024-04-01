@@ -30,3 +30,9 @@ main > h2 {
   right: 10px;
 }
 
+footer {
+  background-color: #bdd4eb; 
+  text-align: center; 
+  padding: 10px;
+}
+
